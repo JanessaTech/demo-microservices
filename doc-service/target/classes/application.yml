@@ -10,17 +10,19 @@ spring:
           uri: lb://first-provider
           predicates:
             - Path=/first-provider/**
+          #filters:
+          #  - StripPrefix=1
 
         - id: second_provider_id
           uri: lb://second-provider
           predicates:
             - Path=/second-provider/**
           #filters:
-          #- StripPrefix=1
+          #  - StripPrefix=1
       discovery:
         locator:
-          enabled: true #开启从注册中心动态创建路由的功能
-          lower-case-service-id: true #使用小写服务名，默认是大写
+          enabled: false #开启从注册中心动态创建路由的功能
+          lower-case-service-id: true   #使用小写服务名，默认是大写
 eureka:
   instance:
     preferIpAddress: true
@@ -30,3 +32,7 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka,http://localhost:8762/eureka
+
+swagger:
+  config:
+    refreshrate: 5000

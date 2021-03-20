@@ -38,7 +38,7 @@ public class Swagger2Config {
                 .globalResponseMessage(RequestMethod.PUT, globalResponseMessageInInfo())
                 .globalResponseMessage(RequestMethod.DELETE, globalResponseMessageInInfo())
                 .apiInfo(apiInfo())
-                .host(hostInfo())
+                //.host(hostInfo())
                 .tags(new Tag("second", "second相关操作"), moreTagInfo())
                 .select()
                 //为当前包下controller生成API文档

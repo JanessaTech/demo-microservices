@@ -1,5 +1,7 @@
 server:
   port: 8766
+  servlet:
+    contextPath: /first-provider
 spring:
   application:
     name: first-provider

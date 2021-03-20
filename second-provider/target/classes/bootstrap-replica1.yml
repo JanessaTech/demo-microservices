@@ -1,9 +1,10 @@
 server:
   port: 8767
+  servlet:
+    contextPath: /second-provider
 spring:
   application:
     name: second-provider
-
 
 eureka:
   instance:

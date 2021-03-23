@@ -1,10 +1,20 @@
-server:
-  port: 8768
-  servlet:
-    contextPath: /second-provider
 spring:
   application:
     name: second-provider
+  zipkin:
+    base-url: http://localhost:9411
+server:
+  port: 8768
+  servlet:
+    contextPath: /${spring.application.name}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
 eureka:
   instance:
     preferIpAddress: true

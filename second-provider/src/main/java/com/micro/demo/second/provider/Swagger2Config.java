@@ -27,9 +27,6 @@ import java.util.List;
 @EnableKnife4j
 public class Swagger2Config {
 
-    @Value("${server.port}")
-    private int port;
-
     @Bean
     public Docket productApi(){
         return new Docket(DocumentationType.SWAGGER_2)
@@ -38,7 +35,6 @@ public class Swagger2Config {
                 .globalResponseMessage(RequestMethod.PUT, globalResponseMessageInInfo())
                 .globalResponseMessage(RequestMethod.DELETE, globalResponseMessageInInfo())
                 .apiInfo(apiInfo())
-                //.host(hostInfo())
                 .tags(new Tag("second", "second相关操作"), moreTagInfo())
                 .select()
                 //为当前包下controller生成API文档
@@ -66,11 +62,6 @@ public class Swagger2Config {
         List<Tag> tags = new ArrayList<Tag>();
         Tag[] res = new Tag[tags.size()];
         return tags.toArray(res);
-    }
-
-    private String hostInfo(){
-        String base_url = String.format("%s:%d", Constants.host, port);
-        return base_url;
     }
 
     private String version(){

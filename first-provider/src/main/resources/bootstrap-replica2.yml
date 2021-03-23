@@ -1,11 +1,8 @@
-server:
-  port: 8766
-  servlet:
-    contextPath: /first-provider
 spring:
   application:
     name: first-provider
-
+  zipkin:
+    base-url: http://localhost:9411
   cloud:
     config:
       label: new
@@ -13,6 +10,11 @@ spring:
       discovery:
         enabled: true
         serviceId: config-server
+server:
+  port: 8766
+  servlet:
+    contextPath: /${spring.application.name}
+
 
 management:
   endpoints:

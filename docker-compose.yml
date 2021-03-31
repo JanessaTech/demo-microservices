@@ -1,0 +1,106 @@
+version: '3'
+services:
+  register-service:
+    container_name: register-service1
+    image: register-service:1.0
+    build: ./register-service
+    ports:
+      - "8761:8761"
+      - "8881:8888"
+    command: ["--spring.profiles.active=docker1"]
+  config-service:
+    container_name: config-service1
+    image: config-service:1.0
+    build: ./config-service
+    ports:
+      - "8763:8763"
+      - "8882:8888"
+    depends_on:
+      - register-service
+    entrypoint: /bin/sh
+    command: >
+          -c "
+          while ! (nc -z register-service1 8761); do sleep 5; echo 'Waiting for register-service1 to start-up...'; done;
+          java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8888,suspend=n -jar -Dspring.profiles.active=docker1 /app.jar
+          "
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    restart: always
+    ports:
+      - "9411:9411"
+
+  first-provider:
+    container_name: first-provider1
+    image: first-provider:1.0
+    build: ./first-provider
+    ports:
+      - "8765:8765"
+      - "8883:8888"
+    depends_on:
+      - zipkin
+      - config-service
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      while ! (nc -z zipkin 9411 && nc -z config-service1 8763); do sleep 5; echo 'Waiting for zipkin and config-service1 to start-up...'; done;
+      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8888,suspend=n -jar -Dspring.profiles.active=docker1 /app.jar
+      "
+  second-provider:
+    container_name: second-provider1
+    image: second-provider:1.0
+    build: ./second-provider
+    ports:
+      - "8767:8767"
+      - "8884:8888"
+    depends_on:
+      - zipkin
+      - first-provider
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      while ! (nc -z zipkin 9411 && nc -z first-provider1 8765); do sleep 5; echo 'Waiting for zipkin and first-provider1 to start-up...'; done;
+      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8888,suspend=n -jar -Dspring.profiles.active=docker1 /app.jar
+      "
+  doc-service:
+    container_name: doc-service1
+    image: doc-service:1.0
+    build: ./doc-service
+    ports:
+      - "8769:8769"
+      - "8885:8888"
+    depends_on:
+      - first-provider
+      - second-provider
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      while ! (nc -z first-provider1 8765 && nc -z second-provider1 8767); do sleep 5; echo 'Waiting for first-provider1 and second-provider1 to start-up...'; done;
+      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8888,suspend=n -jar -Dspring.profiles.active=docker /app.jar
+      "
+  gateway-service:
+    container_name: gateway-service1
+    image: gateway-service:1.0
+    build: ./gateway-service
+    ports:
+      - "8771:8771"
+      - "8886:8888"
+    depends_on:
+      - first-provider
+      - second-provider
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      while ! (nc -z first-provider1 8765 && nc -z second-provider1 8767); do sleep 5; echo 'Waiting for first-provider1 and second-provider1 to start-up...'; done;
+      java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8888,suspend=n -jar -Dspring.profiles.active=docker /app.jar
+      "
+
+# how to run:
+# 1. See how /home/juan/docker/compose looks like on 192.168.0.24(driver)
+# 2. update this file to /home/juan/docker/compose
+# 3. run: docker-compose up -d
+# 4. check the following urls:
+#    - visit  http://192.168.0.24:8761/ (Eureka)
+#    - visit http://192.168.0.24:8769/swagger-ui.html (centric doc)
+#    - visit http://192.168.0.24:8771/first-provider/first/call_second (gateway)
+#    - visit http://192.168.0.24:9411/zipkin/ (zipkin)

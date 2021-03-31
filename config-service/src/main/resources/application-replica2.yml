@@ -7,9 +7,13 @@ spring:
     config:
       server:
         git:
-          uri: git@github.com:hi-supergirl/myfarm-config.git
+          #uri: https://github.com/hi-supergirl/myfarm-config.git
+          #uri: git@github.com:hi-supergirl/myfarm-config.git
+          uri: juan@192.168.0.24:/home/juan/git/config.git
           clone-on-start: true
-
+          username: juan
+          password: NiC$4603
+          strict-host-key-checking: false
 #eureka
 eureka:
   instance:

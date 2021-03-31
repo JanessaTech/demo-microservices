@@ -1,0 +1,30 @@
+server:
+  port: 8769
+spring:
+  application:
+    name: doc-service
+  cloud:
+    gateway:
+      routes:
+        - id: first_provider_id
+          uri: lb://first-provider
+          predicates:
+            - Path=/first-provider/**
+        - id: second_provider_id
+          uri: lb://second-provider
+          predicates:
+            - Path=/second-provider/**
+      discovery:
+        locator:
+          enabled: false #开启从注册中心动态创建路由的功能
+          lower-case-service-id: true   #使用小写服务名，默认是大写
+eureka:
+  instance:
+    preferIpAddress: true
+    hostname: 192.168.0.24
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      #defaultZone: http://192.168.0.24:8761/eureka,http://192.168.0.24:8762/eureka
+      defaultZone: http://192.168.0.24:8761/eureka

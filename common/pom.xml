@@ -29,6 +29,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <!-- repackage without main class-->
                     <skip>true</skip>
                 </configuration>
             </plugin>

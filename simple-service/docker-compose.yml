@@ -1,0 +1,19 @@
+version: '3'
+services:
+  test:
+    container_name: my_test1
+    image: test:1.0
+    build: .
+    environment:
+      JAVA_OPTS: -Dserver.port=9100
+    ports:
+      - "9100:9100"
+    command: ["--spring.profiles.active=replica1"]
+
+# how to run:
+# - copy Dockerfile, docker-compose.yml(this file) and simple-service-1.0-SNAPSHOT.jar to the directory /home/juan/docker/composetest
+# - run: docker-compose up -d
+#   This step is equivalent to:
+#    1) docker build -t test:1.0 .
+#    2) docker run -itd --name my_test1 -p 9100:9100 -e JAVA_OPTS=-Dserver.port=9100 test:1.0 --spring.profiles.active=replica1
+# - check by launching http://192.168.0.24:9100/test/msg

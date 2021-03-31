@@ -17,6 +17,7 @@
         <module>first-provider</module>
         <module>second-provider</module>
         <module>common</module>
+        <module>simple-service</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -30,9 +31,10 @@
         <java.version>1.8</java.version>
         <spring-cloud.version>2020.0.0</spring-cloud.version>
     </properties>
-    <dependencies>
 
+    <dependencies>
     </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -46,20 +48,56 @@
     </dependencyManagement>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <archive>
+                            <addMavenDescriptor>false</addMavenDescriptor>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <!--
+                <plugin>
+                    <groupId>com.spotify</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>0.4.13</version>
+                    <executions>
+                        <execution>
+                            <id>build-image</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>remove-image</id>
+                            <phase>clean</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <forceTags>true</forceTags>
+                        <imageName>${project.artifactId}:1.0</imageName>
+                        <dockerDirectory>${basedir}</dockerDirectory>
+                        <dockerHost>http://192.168.0.24:2375</dockerHost>
+                        <resources>
+                            <resource>
+                                <targetPath>/</targetPath>
+                                <directory>${project.build.directory}</directory>
+                                <include>${project.build.finalName}.jar</include>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </plugin>
+                -->
+            </plugins>
+        </pluginManagement>
     </build>
+
 </project>

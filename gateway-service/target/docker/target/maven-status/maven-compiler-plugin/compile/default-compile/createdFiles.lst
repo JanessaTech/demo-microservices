@@ -1,3 +1,0 @@
-com\micro\demo\gateway\FallbackController.class
-com\micro\demo\gateway\RedisRateLimiterConfig.class
-com\micro\demo\gateway\GatewayApplication.class

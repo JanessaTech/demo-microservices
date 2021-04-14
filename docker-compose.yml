@@ -95,12 +95,4 @@ services:
       java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8888,suspend=n -jar -Dspring.profiles.active=docker /app.jar
       "
 
-# how to run:
-# 1. See how /home/juan/docker/compose looks like on 192.168.0.24(driver)
-# 2. update this file to /home/juan/docker/compose
-# 3. run: docker-compose up -d
-# 4. check the following urls:
-#    - visit  http://192.168.0.24:8761/ (Eureka)
-#    - visit http://192.168.0.24:8769/swagger-ui.html (centric doc)
-#    - visit http://192.168.0.24:8771/first-provider/first/call_second (gateway)
-#    - visit http://192.168.0.24:9411/zipkin/ (zipkin)
+
